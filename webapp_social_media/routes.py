@@ -28,12 +28,27 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_nasc=form.data_nasc.data, start_work_date=form.start_work_date.data, work_state=form.work_state.data, work_city=form.work_city.data, salary=form.salary.data, instruction=form.instruction.data, company=form.company.data)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
+        flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Registro', form=form)
+
+
+# @app.route("/register_premium", methods=['GET', 'POST'])
+# def register_premium():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('home'))
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+#         user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_nasc=form.data_nasc.data, start_work_date=form.start_work_date.data, work_state=form.work_state.data, work_city=form.work_city.data, salary=form.salary.data, instruction=form.instruction.data, company=form.company.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')
+#         return redirect(url_for('login'))
+#     return render_template('register_premium.html', title='Conta Premium', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -79,12 +94,26 @@ def account():
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.data_nasc = form.data_nasc.data
+        current_user.start_work_date = form.start_work_date.data
+        current_user.work_state = form.work_state.data
+        current_user.work_city = form.work_city.data
+        current_user.salary = form.salary.data
+        current_user.instruction = form.instruction.data
+        current_user.company = form.company.data
         db.session.commit()
         flash('your account has been updated!', 'success')
         return redirect(url_for('account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.data_nasc.data = current_user.data_nasc
+        form.start_work_date.data = current_user.start_work_date
+        form.work_state.data = current_user.work_state
+        form.work_city.data = current_user.work_city
+        form.salary.data = current_user.salary
+        form.instruction.data = current_user.instruction
+        form.company.data = current_user.company
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 
