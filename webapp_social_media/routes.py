@@ -3,7 +3,7 @@ import secrets
 import os
 from flask import render_template, url_for, flash, redirect, request, abort
 from webapp_social_media import app, db, bcrypt
-from webapp_social_media.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
+from webapp_social_media.forms import RegistrationForm, RegistrationFormPremium, LoginForm, UpdateAccountForm, PostForm
 from webapp_social_media.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -11,9 +11,16 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
+    if current_user.is_authenticated:
+        return redirect(url_for('feed'))
+    return render_template('home.html', title='Home')
+
+@app.route("/")
+@app.route("/feed")
+def feed():
     page = request.args.get('page', 1, type=int)
     post = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-    return render_template('home.html', posts=post)
+    return render_template('feed.html', posts=post)
 
 
 @app.route("/about")
@@ -24,11 +31,11 @@ def about():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('feed'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_nasc=form.data_nasc.data, start_work_date=form.start_work_date.data, work_state=form.work_state.data, work_city=form.work_city.data, salary=form.salary.data, instruction=form.instruction.data, company=form.company.data)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_nasc=form.data_nasc.data, start_work_date=form.start_work_date.data, work_state=form.work_state.data, work_city=form.work_city.data, salary=form.salary.data, instruction=form.instruction.data, company=form.company.data, card_number=0, card_name='', expiration_date='', cvv='', user_type='free', interest='')
         db.session.add(user)
         db.session.commit()
         flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')
@@ -36,19 +43,19 @@ def register():
     return render_template('register.html', title='Registro', form=form)
 
 
-# @app.route("/register_premium", methods=['GET', 'POST'])
-# def register_premium():
-#     if current_user.is_authenticated:
-#         return redirect(url_for('home'))
-#     form = RegistrationForm()
-#     if form.validate_on_submit():
-#         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-#         user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_nasc=form.data_nasc.data, start_work_date=form.start_work_date.data, work_state=form.work_state.data, work_city=form.work_city.data, salary=form.salary.data, instruction=form.instruction.data, company=form.company.data)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')
-#         return redirect(url_for('login'))
-#     return render_template('register_premium.html', title='Conta Premium', form=form)
+@app.route("/register_premium", methods=['GET', 'POST'])
+def register_premium():
+    if current_user.is_authenticated:
+        return redirect(url_for('feed'))
+    form = RegistrationFormPremium()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_nasc=form.data_nasc.data, start_work_date=form.start_work_date.data, work_state=form.work_state.data, work_city=form.work_city.data, salary=form.salary.data, instruction=form.instruction.data, company=form.company.data, card_number=form.card_number.data, card_name=form.card_name.data, expiration_date=form.expiration_date.data, cvv=form.cvv.data, user_type='premium', interest='')
+        db.session.add(user)
+        db.session.commit()
+        flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')
+        return redirect(url_for('login'))
+    return render_template('register_premium.html', title='Conta Premium', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -101,6 +108,7 @@ def account():
         current_user.salary = form.salary.data
         current_user.instruction = form.instruction.data
         current_user.company = form.company.data
+        current_user.interest = form.interest.data
         db.session.commit()
         flash('your account has been updated!', 'success')
         return redirect(url_for('account'))
@@ -114,6 +122,7 @@ def account():
         form.salary.data = current_user.salary
         form.instruction.data = current_user.instruction
         form.company.data = current_user.company
+        form.interest.data = current_user.interest
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 

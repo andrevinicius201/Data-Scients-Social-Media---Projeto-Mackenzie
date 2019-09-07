@@ -164,13 +164,76 @@
                         {{ form.company(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <hr class="mb-8">
+
+            </fieldset>
+            <h4 class="mb-3">Pagamento</h4>
+
+  
+            <div class="form-group">
+                    {{ form.card_number.label(class="form-control-label") }}
+
+                    {% if form.card_number.errors %}
+                        {{ form.card_number(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.card_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.card_number(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+            <div class="form-group">
+                    {{ form.card_name.label(class="form-control-label") }}
+
+                    {% if form.card_name.errors %}
+                        {{ form.card_name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.card_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.card_name(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            <div class="form-group">
+                    {{ form.expiration_date.label(class="form-control-label") }}
+
+                    {% if form.expiration_date.errors %}
+                        {{ form.expiration_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.expiration_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.expiration_date(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+             <div class="form-group">
+                    {{ form.cvv.label(class="form-control-label") }}
+
+                    {% if form.cvv.errors %}
+                        {{ form.cvv(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.cvv.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.cvv(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+        
+        <hr class="mb-8">
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
-            </fieldset>
-            
+    </div>
     
     <div class="border-top pt-3">
         <small class="text-muted">

@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask import current_app
 from webapp_social_media import db, login_manager
 from flask_login import UserMixin
 
@@ -17,14 +18,20 @@ class User(db.Model, UserMixin):
     salary =  db.Column(db.Float(120), nullable=False)
     instruction =  db.Column(db.String(120), nullable=False)
     company =  db.Column(db.String(120), nullable=False)
+    card_number =  db.Column(db.Float(120), nullable=True)
+    card_name =  db.Column(db.String(120), nullable=True)
+    expiration_date =  db.Column(db.String(120), nullable=True)
+    cvv =  db.Column(db.String(120), nullable=True)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    user_type =  db.Column(db.String(120), nullable=False)
+    interest =  db.Column(db.String(200), nullable=True)
     posts = db.relationship('Post', backref='author', lazy=True)
     
     
     
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.username}', '{self.email}', '{self.image_file}', '{self.user_type}')"
 
 
 class Post(db.Model):
