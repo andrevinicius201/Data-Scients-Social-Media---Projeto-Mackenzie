@@ -18,14 +18,12 @@ def home():
 @app.route("/")
 @app.route("/feed")
 def feed():
-    page = request.args.get('page', 1, type=int)
-    post = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-    return render_template('feed.html', posts=post)
+    page = request.args.get('page', 1, type=int)    
+    posts = Post.query.filter_by(author=current_user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template('feed.html', posts=posts)
 
-
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -182,4 +180,20 @@ def user_posts(username):
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date_posted.desc())\
         .paginate(page=page, per_page=5)
+    return render_template('user_posts.html', posts=posts, user=user)
+
+@app.route('/search_user', methods=['GET', 'POST'])
+def search_user():
+    form = request.form
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=form['username']).first()
+    if user is None:
+        posts = Post.query.filter_by(author=current_user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5)
+        return render_template('feed.html', posts=posts)
+
+    posts = Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5) 
     return render_template('user_posts.html', posts=posts, user=user)
