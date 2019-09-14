@@ -25,7 +25,6 @@ def feed():
     return render_template('feed.html', posts=posts)
 
 
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -191,6 +190,7 @@ def search_user():
         posts = Post.query.filter_by(author=current_user)\
         .order_by(Post.date_posted.desc())\
         .paginate(page=page, per_page=5)
+        flash('Usuario não existe', category="message")
         return render_template('feed.html', posts=posts)
 
     posts = Post.query.filter_by(author=user)\
