@@ -90,13 +90,12 @@ class RegistrationFormPremium(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+    password = PasswordField('Senha', validators=[DataRequired()])
+    submit = SubmitField('Entrar')
 
 
 class UpdateAccountForm(FlaskForm):
-    username = StringField('Username',
+    username = StringField('Nome de usuário',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     data_nasc = StringField('Data de nascimento', validators=[
@@ -136,9 +135,9 @@ class UpdateAccountForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
+    title = StringField('Título', validators=[DataRequired()])
+    content = TextAreaField('Conteúdo', validators=[DataRequired()])
+    submit = SubmitField('Publicar')
 
 class UserInterestForm(FlaskForm):    
     submit = SubmitField('Post')
