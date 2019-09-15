@@ -90,13 +90,12 @@ class RegistrationFormPremium(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+    password = PasswordField('Senha', validators=[DataRequired()])
+    submit = SubmitField('Entrar')
 
 
 class UpdateAccountForm(FlaskForm):
-    username = StringField('Username',
+    username = StringField('Nome de usuário',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     data_nasc = StringField('Data de nascimento', validators=[
@@ -112,11 +111,11 @@ class UpdateAccountForm(FlaskForm):
                               DataRequired(), Length(min=2, max=20)])
     company = StringField('Nome da empresa que você trabalha atualmente', validators=[
                           DataRequired(), Length(min=2, max=40)])
-    picture = FileField('Update Profile Picture', validators=[
+    picture = FileField('Atualizar imagem de perfil', validators=[
                         FileAllowed(['jpg', 'png'])])
     interest = StringField('Seus tópicos de interesse', validators=[
                            DataRequired(), Length(min=2, max=200)])
-    submit = SubmitField('Update')
+    submit = SubmitField('Atualizar dados')
 
     def validate_username(self, username):
         if username.data != current_user.username:
@@ -134,9 +133,9 @@ class UpdateAccountForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
+    title = StringField('Título', validators=[DataRequired()])
+    content = TextAreaField('Conteúdo', validators=[DataRequired()])
+    submit = SubmitField('Publicar')
 
 
 

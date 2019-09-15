@@ -25,6 +25,7 @@ def feed():
     return render_template('feed.html', posts=posts)
 
 
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -63,7 +64,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
+            login_user(user)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -134,7 +135,7 @@ def new_post():
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Post', form=form, legend="New Post")
+    return render_template('create_post.html', title='Nova publicação', form=form, legend="Nova publicação")
     
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
@@ -190,7 +191,6 @@ def search_user():
         posts = Post.query.filter_by(author=current_user)\
         .order_by(Post.date_posted.desc())\
         .paginate(page=page, per_page=5)
-        flash('Usuario não existe', category="message")
         return render_template('feed.html', posts=posts)
 
     posts = Post.query.filter_by(author=user)\
