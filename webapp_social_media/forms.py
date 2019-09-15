@@ -113,9 +113,11 @@ class UpdateAccountForm(FlaskForm):
     company = StringField('Nome da empresa que você trabalha atualmente', validators=[
                           DataRequired(), Length(min=2, max=40)])
     picture = FileField('Update Profile Picture', validators=[
-                        FileAllowed(['jpg', 'png'])])
-    interest = StringField('Seus tópicos de interesse', validators=[
-                           DataRequired(), Length(min=2, max=200)])
+                        FileAllowed(['jpg', 'png'])])    
+    card_number = FloatField('Número do cartão de crédito')
+    card_name = StringField('Nome no cartão de crédito')
+    expiration_date = StringField('Data de validade')
+    cvv = StringField('Código de Verificacao - CVV')
     submit = SubmitField('Update')
 
     def validate_username(self, username):
@@ -138,5 +140,7 @@ class PostForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
 
+class UserInterestForm(FlaskForm):    
+    submit = SubmitField('Post')
 
 

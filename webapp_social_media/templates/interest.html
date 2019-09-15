@@ -1,0 +1,33 @@
+{% extends "layout.html" %} {% block content %}
+
+<h1>Escolha seus tópicos de Interesse</h1>
+<div class="content-section">
+  <div class="media">
+    <img class="rounded-circle account-img" src="{{ image_file }}" />
+    <div class="media-body">
+      <h2 class="account-heading">{{ user.username }}</h2>
+      <p class="text-secondary">{{ user.email }}</p>
+    </div>
+  </div>
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      {% for interest in interests %} {% if interest.label in user_interest%}
+      <input
+        type="checkbox"
+        name="interests"
+        value="{{ interest.label }}"
+        checked
+      />
+      <label for="id_{{ interest.label }}">{{ interest.label }}</label>
+      {%else%}
+      <input type="checkbox" name="interests" value="{{ interest.label }}" />
+      <label for="id_{{ interest.label }}">{{ interest.label }}</label>
+      {%endif%} {% endfor %}
+    </fieldset>
+    <div class="form-group">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+  </form>
+</div>
+{% endblock content %}

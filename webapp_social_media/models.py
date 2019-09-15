@@ -28,11 +28,12 @@ class User(db.Model, UserMixin):
                            default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     user_type = db.Column(db.String(120), nullable=False)
-    interest = db.Column(db.String(200), nullable=True)
+    interests = db.relationship(
+        'InterestTopicUser', backref='interested', lazy=True)
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}', '{self.user_type}')"
+        return f"User('{self.id}','{self.username}', '{self.email}', '{self.image_file}', '{self.user_type}')"
 
 
 class Post(db.Model):
@@ -46,10 +47,22 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
 
+
 class InterestTopic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(100), nullable=False)
+    users_topics_id = db.relationship('InterestTopicUser',
+                               backref='topic', lazy=True)
+
+    def __repr__(self):
+        return f"InterestTopic('{self.label}')"
+
+
+class InterestTopicUser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    topic_id = db.Column(db.String(100), db.ForeignKey(
+        'interest_topic.label'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"InterestTopicUser('{self.topic_id}', '{self.user_id}')"

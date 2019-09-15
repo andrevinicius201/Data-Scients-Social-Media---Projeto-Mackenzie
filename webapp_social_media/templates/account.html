@@ -138,149 +138,9 @@
                         {{ form.company(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-            </fieldset>
-
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4"> Tópicos de interesse </legend>
-                <div class="form-group">
-                    {{ form.username.label(class="form-control-label") }}
-
-                    {% if form.username.errors %}
-                        {{ form.username(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.username.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.username(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                
-                <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.email(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
 
                 <div class="form-group">
-                    {{ form.data_nasc.label(class="form-control-label") }}
-                    {% if form.data_nasc.errors %}
-                        {{ form.data_nasc(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.data_nasc.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.data_nasc(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.start_work_date.label(class="form-control-label") }}
-                    {% if form.start_work_date.errors %}
-                        {{ form.start_work_date(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.start_work_date.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.start_work_date(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.work_state.label(class="form-control-label") }}
-                    {% if form.work_state.errors %}
-                        {{ form.work_state(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.work_state.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.work_state(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.work_city.label(class="form-control-label") }}
-                    {% if form.work_city.errors %}
-                        {{ form.work_city(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.work_city.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.work_city(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.salary.label(class="form-control-label") }}
-                    {% if form.salary.errors %}
-                        {{ form.salary(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.salary.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.salary(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.instruction.label(class="form-control-label") }}
-                    {% if form.instruction.errors %}
-                        {{ form.instruction(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.instruction.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.instruction(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.company.label(class="form-control-label") }}
-                    {% if form.company.errors %}
-                        {{ form.company(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.company.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.company(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.interest.label(class="form-control-label") }}
-                    {% if form.interest.errors %}
-                        {{ form.interest(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.interest.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.interest(class="form-control form-control-lg") }}
-                    {% endif %}
+                        <a class="article-title" href="{{ url_for('user_interests', username=current_user.username) }}">Interesses</a>
                 </div>
             </fieldset>
 
@@ -294,6 +154,63 @@
                     {%endif%}
             </div>
 
+            {% if current_user.user_type == 'premium'%}
+            <div class="form-group">
+                    {{ form.card_number.label(class="form-control-label") }}
+                    {% if form.card_number.errors %}
+                        {{ form.card_number(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.card_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.card_number(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.card_name.label(class="form-control-label") }}
+                    {% if form.card_name.errors %}
+                        {{ form.card_name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.card_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.card_name(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                    
+                <div class="form-group">
+                    {{ form.expiration_date.label(class="form-control-label") }}
+                    {% if form.expiration_date.errors %}
+                        {{ form.expiration_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.expiration_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.expiration_date(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.cvv.label(class="form-control-label") }}
+                    {% if form.cvv.errors %}
+                        {{ form.cvv(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.cvv.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.cvv(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            {% endif %}
 
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
