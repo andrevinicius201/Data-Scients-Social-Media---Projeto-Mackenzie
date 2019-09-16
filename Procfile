@@ -1,1 +1,1 @@
-web: gunicorn app:app --log-file=-
+web gunicorn manage:data-scients-social-media
