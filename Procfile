@@ -1,1 +1,1 @@
-web gunicorn manage:data-scients-social-media
+web gunicorn __init__:app
