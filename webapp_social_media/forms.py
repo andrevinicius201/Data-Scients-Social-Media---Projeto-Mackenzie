@@ -142,4 +142,7 @@ class PostForm(FlaskForm):
 class UserInterestForm(FlaskForm):    
     submit = SubmitField('Post')
 
+class SearchUserForm(FlaskForm):
+    username = StringField('Usuario', validators=[DataRequired()])
+    submit = SubmitField('Post')
 

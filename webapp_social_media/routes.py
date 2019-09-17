@@ -3,7 +3,7 @@ import secrets
 import os
 from flask import render_template, url_for, flash, redirect, request, abort
 from webapp_social_media import app, db, bcrypt
-from webapp_social_media.forms import RegistrationForm, RegistrationFormPremium, LoginForm, UpdateAccountForm, PostForm, UserInterestForm
+from webapp_social_media.forms import RegistrationForm, RegistrationFormPremium, LoginForm, UpdateAccountForm, PostForm, UserInterestForm, SearchUserForm
 from webapp_social_media.models import User, Post, InterestTopic, InterestTopicUser
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -233,9 +233,9 @@ def user_posts(username):
 
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
-    form = request.form
+    form = SearchUserForm()
     page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(username=form['username']).first()
+    user = User.query.filter_by(username=form.username.data).first()
     if user is None:
         posts = Post.query.filter_by(author=current_user)\
             .order_by(Post.date_posted.desc())\
