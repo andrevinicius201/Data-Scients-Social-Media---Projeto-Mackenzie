@@ -247,3 +247,19 @@ def search_user():
         .order_by(Post.date_posted.desc())\
         .paginate(page=page, per_page=5)
     return render_template('user_posts.html', posts=posts, user=user)
+
+
+
+@app.route('/follow/<nickname>')
+@login_required
+def follow(nickname):
+    user = User.query.filter_by(username=nickname).first()
+    if user is None:
+        flash('User %s not found.' % nickname)
+        return redirect(url_for('index'))
+    u = user.follow(nickname)
+    db.session.add(u)
+    db.session.commit()
+    flash('You are now following ' + nickname + '!')
+    return redirect(url_for('user', username=nickname))
+
