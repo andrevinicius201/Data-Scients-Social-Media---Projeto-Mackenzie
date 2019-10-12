@@ -8,10 +8,19 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-followers = db.Table('followers',
+
+'''followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-)
+)'''
+
+recomendations = db.Table('recomendations',
+                          db.Column('recommender_id', db.Integer,
+                                    db.ForeignKey('user.id')),
+                          db.Column('recommended_id', db.Integer,
+                                    db.ForeignKey('user.id'))
+                          )
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,6 +32,7 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,14 +56,33 @@ class User(db.Model, UserMixin):
     interests = db.relationship(
         'InterestTopicUser', backref='interested', lazy=True)
     posts = db.relationship('Post', backref='author', lazy=True)
-    followed = db.relationship('User', 
-                               secondary=followers, 
-                               primaryjoin=(followers.c.follower_id == id), 
-                               secondaryjoin=(followers.c.followed_id == id), 
-                               backref=db.backref('followers', lazy='dynamic'), 
-                               lazy='dynamic')
+    recommended = db.relationship('User',
+                                  secondary=recomendations,
+                                  primaryjoin=(
+                                      recomendations.c.recommender_id == id),
+                                  secondaryjoin=(
+                                      recomendations.c.recommended_id == id),
+                                  backref=db.backref(
+                                      'recomendations', lazy='dynamic'),
+                                  lazy='dynamic')
 
-    def follow(self, user):
+    def recommend(self, user):
+        if not self.is_recommending(user):
+            self.recommended.append(user)
+            return self
+
+    def unrecommend(self, user):
+        if self.is_recommending(user):
+            self.recommended.remove(user)
+            return self
+
+    def is_recommending(self, user):
+        return self.recommended.filter(recomendations.c.recommended_id == user.id).count() > 0
+
+    def recommended_posts(self):
+        return Post.query.join(recomendations, (recomendations.c.recommended_id == Post.user_id)).filter(recomendations.c.recommender_id == self.id).order_by(Post.date_posted.desc())
+
+    '''def follow(self, user):
         if not self.is_following(user):
             self.followed.append(user)
             return self
@@ -68,19 +97,17 @@ class User(db.Model, UserMixin):
 
 
     def followed_posts(self):
-        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.date_posted.desc())    
+        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.date_posted.desc())    '''
 
     def __repr__(self):
         return f"User('{self.id}','{self.username}', '{self.email}', '{self.image_file}', '{self.user_type}')"
-
-
 
 
 class InterestTopic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(100), nullable=False)
     users_topics_id = db.relationship('InterestTopicUser',
-                               backref='topic', lazy=True)
+                                      backref='topic', lazy=True)
 
     def __repr__(self):
         return f"InterestTopic('{self.label}')"
@@ -94,5 +121,3 @@ class InterestTopicUser(db.Model):
 
     def __repr__(self):
         return f"InterestTopicUser('{self.topic_id}', '{self.user_id}')"
-
-

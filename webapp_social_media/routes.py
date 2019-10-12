@@ -225,10 +225,11 @@ def delete_post(post_id):
 def user_posts(username):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
+    image_file = url_for('static', filename='profile_pics/' + user.image_file)
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date_posted.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('user_posts.html', posts=posts, user=user)
+    return render_template('user_posts.html', posts=posts, user=user, image_file=image_file)
 
 
 @app.route('/search_user', methods=['GET', 'POST'])
@@ -241,25 +242,64 @@ def search_user():
             .order_by(Post.date_posted.desc())\
             .paginate(page=page, per_page=5)
         flash('Usuario não existe', category="message")
-        return render_template('feed.html', posts=posts)
+        return redirect(url_for('feed'))
 
     posts = Post.query.filter_by(author=user)\
         .order_by(Post.date_posted.desc())\
         .paginate(page=page, per_page=5)
-    return render_template('user_posts.html', posts=posts, user=user)
+    return redirect(url_for('user_posts', username=user.username))
 
-
-
-@app.route('/follow/<nickname>')
+@app.route('/recommend/<nickname>')
 @login_required
-def follow(nickname):
-    user = User.query.filter_by(username=nickname).first()
+def recommend(nickname):
+    user = User.query.filter_by(username=nickname).first_or_404()
     if user is None:
         flash('User %s not found.' % nickname)
-        return redirect(url_for('index'))
-    u = user.follow(nickname)
-    db.session.add(u)
+        return redirect(url_for('feed'))
+    current_user.recommend(user)
+    db.session.commit()
+    flash('You recommended ' + nickname + '!')
+    return redirect(url_for('user_posts', username=nickname))
+
+@app.route('/unrecommend/<nickname>')
+@login_required
+def unrecommend(nickname):
+    user = User.query.filter_by(username=nickname).first_or_404()
+    if user is None:
+        flash('User {} not found.'.format(nickname))
+        return redirect(url_for('feed'))
+    if user == current_user:
+        flash('You cannot unrecommend yourself!')
+        return redirect(url_for('feed'))
+    current_user.unrecommend(user)
+    db.session.commit()
+    flash('You are not recommending {} anymore'.format(nickname))
+    return redirect(url_for('user_posts', username=nickname))
+
+'''@app.route('/follow/<nickname>')
+@login_required
+def follow(nickname):
+    user = User.query.filter_by(username=nickname).first_or_404()
+    if user is None:
+        flash('User %s not found.' % nickname)
+        return redirect(url_for('feed'))
+    current_user.follow(user)
     db.session.commit()
     flash('You are now following ' + nickname + '!')
-    return redirect(url_for('user', username=nickname))
+    return redirect(url_for('user_posts', username=nickname))
+
+@app.route('/unfollow/<nickname>')
+@login_required
+def unfollow(nickname):
+    user = User.query.filter_by(username=nickname).first_or_404()
+    if user is None:
+        flash('User {} not found.'.format(nickname))
+        return redirect(url_for('feed'))
+    if user == current_user:
+        flash('You cannot unfollow yourself!')
+        return redirect(url_for('feed'))
+    current_user.unfollow(user)
+    db.session.commit()
+    flash('You are not following {} anymore'.format(nickname))
+    return redirect(url_for('user_posts', username=nickname))'''
 
