@@ -10,11 +10,15 @@
 
         <div class="col">
           {% if not current_user.is_recommending(user) %}
-          <a href="{{ url_for('recommend', nickname=user.username) }}"
+          <a
+            class="btn btn-success"
+            href="{{ url_for('recommend', nickname=user.username) }}"
             >Recomendar ({{ user.recomendations.count() }})</a
           >
           {% else %}
-          <a href="{{ url_for('unrecommend', nickname=user.username) }}"
+          <a
+            class="btn btn-danger"
+            href="{{ url_for('unrecommend', nickname=user.username) }}"
             >Remover Recomendação ({{ user.recomendations.count() }})</a
           >
           {% endif %}
@@ -49,10 +53,10 @@
           <p class="text-secondary">{{ user.company }}</p>
 
           <a
-            class="article-title"
-            href="{{ url_for('user_interests', username=current_user.username) }}"
+            class="btn btn-primary"
+            href="{{ url_for('user_interests', username=user.username) }}"
           >
-            Interesses
+            Tópicos de Interesses
           </a>
         </div>
       </div>

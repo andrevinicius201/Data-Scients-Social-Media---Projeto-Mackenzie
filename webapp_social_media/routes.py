@@ -27,7 +27,7 @@ def feed():
 
 
 @app.route('/interests/<string:username>', methods=['GET', 'POST'])
-def user_interests(username):
+def interests(username):
     form = UserInterestForm()
     user = User.query.filter_by(username=username).first_or_404()     
 
@@ -71,7 +71,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')        
-        return redirect(url_for('user_interests', username=user.username))
+        return redirect(url_for('interests', username=user.username))
     return render_template('register.html', title='Registro', form=form)
 
 
@@ -88,7 +88,7 @@ def register_premium():
         db.session.add(user)
         db.session.commit()
         flash('Sua conta acaba de ser criada. Você já pode acessar o sistema!', 'success')
-        return redirect(url_for('user_interests', username=user.username))
+        return redirect(url_for('interests', username=user.username))
     return render_template('register_premium.html', title='Conta Premium', form=form)
 
 
@@ -221,7 +221,7 @@ def delete_post(post_id):
     return redirect(url_for('home'))
 
 
-@app.route("/user/<string:username>")
+@app.route("/user_posts/<string:username>")
 def user_posts(username):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
@@ -231,6 +231,16 @@ def user_posts(username):
         .paginate(page=page, per_page=5)
     return render_template('user_posts.html', posts=posts, user=user, image_file=image_file)
 
+@app.route("/user_interests/<string:username>")
+def user_interests(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    image_file = url_for('static', filename='profile_pics/' + user.image_file)
+    posts = Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5)    
+    interests = InterestTopicUser.query.filter_by(interested=user).paginate(page=page, per_page=5) 
+    return render_template('user_interests.html', posts=posts, user=user, interests=interests ,image_file=image_file)
 
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():

@@ -1,0 +1,88 @@
+{% extends "layout.html" %} {% block content %}
+<div class="content-section">
+  <div class="media">
+    <img class="rounded-circle account-img" src="{{ image_file }}" />
+    <div class="media-body">
+      <div class="row">
+        <div class="col">
+          <h2 class="account-heading">{{ user.username }}</h2>
+        </div>
+
+        <div class="col">
+          {% if not current_user.is_recommending(user) %}
+          <a
+            class="btn btn-success"
+            href="{{ url_for('recommend', nickname=user.username) }}"
+            >Recomendar ({{ user.recomendations.count() }})</a
+          >
+          {% else %}
+          <a
+            class="btn btn-danger"
+            href="{{ url_for('unrecommend', nickname=user.username) }}"
+            >Remover Recomendação ({{ user.recomendations.count() }})</a
+          >
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="row" style="width: 100%;">
+        <div class="col" style="width: 50%;">
+          <p style="color: black; margin-bottom: 0px;">Email</p>
+          <p class="text-secondary">{{ user.email }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Data de Nascimento</p>
+          <p class="text-secondary">{{ user.data_nasc }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">
+            Começou a trabalhar em
+          </p>
+          <p class="text-secondary">{{ user.start_work_date }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Estado que Trabalha</p>
+          <p class="text-secondary">{{ user.work_state }}</p>
+        </div>
+
+        <div class="cow" style="width: 50%;">
+          <p style="color: black; margin-bottom: 0px;">Cidade que Trabalha</p>
+          <p class="text-secondary">{{ user.work_city }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Grau de Escolaridade</p>
+          <p class="text-secondary">{{ user.instruction }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Empresa que Trabalha</p>
+          <p class="text-secondary">{{ user.company }}</p>
+
+          <a
+            class="btn btn-primary"
+            href="{{ url_for('user_posts', username=user.username) }}"
+          >
+            Posts
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 class="mb-3">
+  Tópicos de Interesse de {{ user.username }}: ({{ interests.total }})
+</h1>
+{% for interest in interests.items %}
+<article class="media content-section">
+  <div class="media-body">
+    <h2>
+      {{ interest.topic_id }}
+    </h2>
+  </div>
+</article>
+{% endfor %} {% for page_num in interests.iter_pages(left_edge=1, right_edge=1,
+left_current=1, right_current=2) %} {%if page_num%} {%if interests.page ==
+page_num %}
+<a class="btn btn-info mb-4" href="{{url_for('home', page=page_num)}}">
+  {{ page_num }}
+</a>
+{%else%}
+<a class="btn btn-outline-info mb-4" href="{{url_for('home', page=page_num)}}">
+  {{ page_num }}
+</a>
+{%endif%} {%else%} ... {%endif%} {% endfor %} {% endblock content %}
