@@ -245,18 +245,10 @@ def user_interests(username):
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
     form = SearchUserForm()
-    page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=form.username.data).first()
-    if user is None:
-        posts = Post.query.filter_by(author=current_user)\
-            .order_by(Post.date_posted.desc())\
-            .paginate(page=page, per_page=5)
+    if user is None:        
         flash('Usuario não existe', category="message")
         return redirect(url_for('feed'))
-
-    posts = Post.query.filter_by(author=user)\
-        .order_by(Post.date_posted.desc())\
-        .paginate(page=page, per_page=5)
     return redirect(url_for('user_posts', username=user.username))
 
 @app.route('/recommend/<nickname>')

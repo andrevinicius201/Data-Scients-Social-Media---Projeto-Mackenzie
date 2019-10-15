@@ -12,18 +12,112 @@
   <form method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-      {% for interest in interests %} {% if interest.label in user_interest%}
-      <input
-        type="checkbox"
-        name="interests"
-        value="{{ interest.label }}"
-        checked
-      />
-      <label for="id_{{ interest.label }}">{{ interest.label }}</label>
-      {%else%}
-      <input type="checkbox" name="interests" value="{{ interest.label }}" />
-      <label for="id_{{ interest.label }}">{{ interest.label }}</label>
-      {%endif%} {% endfor %}
+      <table>
+        <thead>
+          <tr>
+            <th colspan="3">Interesses</th>
+          </tr>
+        </thead>
+        {% for i in range(0, interests|length , 3) %} {% if interests[i].label
+        in user_interest%}
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i].label }}"
+              checked
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i].label }}">{{
+              interests[i].label
+            }}</label>
+          </td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i + 1].label }}"
+              checked
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i + 1].label }}">{{
+              interests[i + 1].label
+            }}</label>
+          </td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i + 2].label }}"
+              checked
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i + 2].label }}">{{
+              interests[i + 2].label
+            }}</label>
+          </td>
+        </tr>
+        {%else%}
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i].label }}"
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i].label }}">{{
+              interests[i].label
+            }}</label>
+          </td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i + 1].label }}"
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i + 1].label }}">{{
+              interests[i + 1].label
+            }}</label>
+          </td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i + 2].label }}"
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i + 2].label }}">{{
+              interests[i + 2].label
+            }}</label>
+          </td>
+        </tr>
+        {%endif%} {% endfor %}
+      </table>
     </fieldset>
     <div class="form-group">
       {{ form.submit(class="btn btn-outline-info") }}
